@@ -10,7 +10,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class IngredientConsumer {
-    public String name;
-    public String unit;
-    public int quantity;
+    private String name;
+    private String unit;
+    private int quantity;
 }

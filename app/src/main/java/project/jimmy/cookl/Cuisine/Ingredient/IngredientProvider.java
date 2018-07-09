@@ -12,27 +12,29 @@ import lombok.Getter;
 public class IngredientProvider {
     private final String name;
     private final String unit;
+    private final int limit;
     private int quantity;
 
-    // You may want to buy more since at least one cuisine need it.
-    private boolean isShoppingReminder = false;
+    private boolean isShoppingRequired() {
+        return quantity <= limit;
+    }
 
-    // You need to buy more since all cuisine need it.
-    private boolean isShoppingRequired = true;
+    public boolean isConsumable(IngredientConsumer consumer) {
+        return consumer.getName().equals(name) && consumer.getQuantity() <= quantity;
+    }
 
     /**
      *
-     * @param ingredient
+     * @param consumer
      * @return true if consumed successfully, false otherwise
      */
-    public boolean consume(IngredientConsumer ingredient) {
-        return !ingredient.getName().equals(name)               // check consumed correct type of ingredient
-                && ingredient.getQuantity() <= quantity         // check provider has enough inventory
-                && substituteSuccess(ingredient.getQuantity()); // success
+    public void consume(IngredientConsumer consumer) {
+        if (isConsumable(consumer)) {
+            quantity -= consumer.getQuantity();
+        }
     }
 
-    private boolean substituteSuccess(int i) {
-        quantity -= i;
-        return true;
+    public void increaseQuantity(int quantity) {
+        this.quantity += quantity;
     }
 }
